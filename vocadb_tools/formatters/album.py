@@ -51,9 +51,9 @@ class AlbumFormatter:
         for song in self.album_data['songs']:
             track_num = song['trackNumber']
             name = song['name']
-            translation = " {{{{{{-3 {{{{{{#gray ()}}}}}}}}}}}}" if is_japanese(name) else ""
+            translation = " {{{-3 {{{#gray ()}}}}}}" if is_japanese(name) else ""
             
-            artists = [get_korean_vocalist(a) for a in song['song']['artistString'].split("feat. ")[-1].strip().split(', ')]
+            artists = [get_korean_vocalist(a) for a in song['song']['artistString'].split("feat. ")[-1].strip().split(', ')] if 'song' in song else []
             artists_formatted = ', '.join(f"[[{a}]]" for a in artists)
             
             tracks.append(f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {artists_formatted} ||")

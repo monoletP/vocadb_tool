@@ -9,7 +9,7 @@
 
     python -m bin.album <album_id> --mode <mode>
 
-<album_id>는 앨범 창의 주소에서 /S/ 뒤의 숫자입니다. 예를 들어 앨범 No title+(https://vocadb.net/Al/9553)의 표를 생성한다면 다음과 같이 입력합니다.
+<album_id>는 앨범 창의 주소에서 /S/ 뒤의 숫자입니다. 예를 들어 앨범 [No title+](https://vocadb.net/Al/9553)의 표를 생성한다면 다음과 같이 입력합니다.
 
     python -m bin.album 9553
 
@@ -18,12 +18,14 @@ mode는 full, only_link, utaite 세 가지가 있습니다. 기본값은 full입
 * only_link는 앨범의 스트리밍 링크 주소만을 가져옵니다.
 * utaite는 full과 마찬가지로 모든 앨범 정보를담은 표를 생성하는데, vocadb가 아닌 utaitedb에서 가져옵니다. 
 
+TODO: Dics 줄 자동추가
+
 ### 특정 곡의 음반 목록 가져오기
 다음 명령어를 사용하여 입력한 song_id에 해당하는 곡이 수록된 모든 앨범들을 가져옵니다. 곡 문서의 음반 목록에 사용됩니다. 결과는 클립보드에 복사됩니다. 
 
     python -m bin.album_list <song_id>
 
-<song_id>는 곡 창의 주소에서 /S/ 뒤의 숫자입니다. 예를 들어 곡 ヴァンパイア(https://vocadb.net/S/321205)의 음반 목록 문단을 생성한다면 다음과 같이 입력합니다.
+<song_id>는 곡 창의 주소에서 /S/ 뒤의 숫자입니다. 예를 들어 곡 [ヴァンパイア](https://vocadb.net/S/321205)의 음반 목록 문단을 생성한다면 다음과 같이 입력합니다.
 
     python -m bin.album_list 321205
 
