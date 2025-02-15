@@ -30,14 +30,14 @@ TODO: Dics 줄 자동추가
     python -m bin.album_list 321205
 
 ### 프로듀서의 투고곡 목록 표 생성하기
-다음 명령어를 사용해 프로듀서 문서의 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
+다음 명령어를 사용해 입력한 artist_id에 해당하는 프로듀서 문서의 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
 
-vocadb에 직접 접속해 프로듀서 문서에서 Recent songs / PVs을 클릭해 나오는 곡 목록에서 More filters를 클릭하고 Song type은 Original Song, Artist에서 Only main songs, 그리고 밑의 Only with PVs를 체크합니다. Showing 10 items of ???라 적힌 것을 클릭 후 한번에 보이는 곡 수를 40 또는 100으로 변경합니다.(표가 지나치게 길면 vocadb에 요청 도중 끊길 수 있습니다.)
+    python -m bin.song_list <artist_id> <max_count>
 
-그 다음 개발자 도구(f12)를 열어서 Ctrl+Shift+C로 표 요소를 선택합니다. 딱 봐도 앨범에만 수록되어 있는 곡은 tr요소를 선택 후 Delete element하는 것을 추천합니다. 마지막으로 tbody 요소를 선택 후 Copy - Copy element를 해서 표에 해당하는 html 코드를 클립보드에 복사합니다. 이것이 입력값으로 들어갑니다. 그리고 다음 명령어를 실행합니다. 
+<artist_id>는 프로듀서 창의 주소에서 /Ar/ 뒤의 숫자입니다. 예를 들어 프로듀서 [マサラダ](https://vocadb.net/Ar/121038)의 곡 목록 표를 생성한다면 다음과 같이 입력합니다.
 
-    python -m bin.song_list
+    python -m bin.song_list 121038
 
-설명이 이해가지 않는다면 다음 링크를 참고해주세요.(https://gall.dcinside.com/mgallery/board/view?id=mikuhatsune&no=230899)
+<max_count>는 최신으로부터 몇 곡을 가져올 것인지를 정합니다. 예를 들어 아래와 같이 입력하면 울트라 트레일러와 (무)책임집합체만 가져옵니다.(25.02.16 기준 최신 2곡)
 
-TODO: html 코드를 직접 복사하지 않고 프로듀서 id만 입력하면 가져올 수 있게 수정
+    python -m bin.song_list 121038 2
