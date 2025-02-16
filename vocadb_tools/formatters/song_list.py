@@ -16,9 +16,10 @@ class SongListFormatter:
         self.api = VocaDBAPI()
         self.song_ids = song_ids
 
-    def _format_media_icons(self, pvs: List[Dict]) -> str:
+    def _format_media_icons(self, pvs: List[Dict]) -> (str, datetime):
         """
         PV 링크를 위키 아이콘으로 변환합니다.
+        아이콘은 NicoNicoDouga, Youtube, Bilibili, SoundCloud, Piapro 순으로 합쳐집니다.
         """
         icons = {
             'NicoNicoDouga': '[[파일:니코니코 동화 아이콘.svg|width=24]]',
@@ -27,12 +28,13 @@ class SongListFormatter:
             'SoundCloud': '[[파일:사운드클라우드 아이콘.svg|width=24]]',
             'Piapro': '[[파일:피아프로 아이콘.svg|width=24]]'
         }
-        media_links = []
+        media_links_dict = {service: [] for service in icons}
         earliest_date = datetime.max
 
         for pv in pvs:
-            if not pv.get('pvType') == 'Original' or pv.get('disabled'):
+            if pv.get('pvType') != 'Original' or pv.get('disabled'):
                 continue
+
             service = pv['service']
             url = pv['url']
 
@@ -41,16 +43,19 @@ class SongListFormatter:
                 continue
 
             if service in icons:
-                media_links.append(f"[[{url}|{icons[service]}]]")
+                media_links_dict[service].append(f"[[{url}|{icons[service]}]]")
 
-            # 가장 이른 공개일 찾기
             pub_date = datetime.fromisoformat(
                 pv.get('publishDate', '2100-01-01T00:00:00')
             )
             if pub_date < earliest_date:
                 earliest_date = pub_date
 
-        return ''.join(media_links), earliest_date
+        # 원하는 순서대로 아이콘을 결합
+        order = ['NicoNicoDouga', 'Youtube', 'Bilibili', 'SoundCloud', 'Piapro']
+        media_links = ''.join(''.join(media_links_dict[service]) for service in order)
+
+        return media_links, earliest_date
 
     def format_song_list(self) -> str:
         """
