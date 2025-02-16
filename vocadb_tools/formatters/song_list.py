@@ -45,7 +45,7 @@ class SongListFormatter:
 
             # 가장 이른 공개일 찾기
             pub_date = datetime.fromisoformat(
-                pv['publishDate'].replace('Z', '+00:00')
+                pv.get('publishDate', '2100-01-01T00:00:00')
             )
             if pub_date < earliest_date:
                 earliest_date = pub_date
