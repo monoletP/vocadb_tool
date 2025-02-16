@@ -1,11 +1,13 @@
-from typing import Dict
+from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
 from vocadb_tools.utils.formatting import format_dictdate_korean, format_media_links
 from vocadb_tools.utils.mappings import get_korean_vocalist
 
 class AlbumFormatter:
-    def __init__(self, album_data: Dict):
-        self.album_data = album_data
+    def __init__(self, album_id: int, site: str = 'vocadb'):
+        self.api = VocaDBAPI() if site != 'utaitedb' else VocaDBAPI('utaitedb')
+        self.album_id = album_id
+        self.album_data = self.api.get_album_details(album_id)
         
     def _format_album_info(self) -> str:
         """
@@ -53,10 +55,39 @@ class AlbumFormatter:
             name = song['name']
             translation = " {{{-3 {{{#gray ()}}}}}}" if is_japanese(name) else ""
             
-            artists = [get_korean_vocalist(a) for a in song['song']['artistString'].split("feat. ")[-1].strip().split(', ')] if 'song' in song else []
-            artists_formatted = ', '.join(f"[[{a}]]" for a in artists)
+            if 'song' in song:
+                vocals_list = []
+                for v in song['song']['artistString'].split("feat. ")[-1].strip().split(', '):
+                    vocal = get_korean_vocalist(v)
+                    if vocal not in vocals_list:
+                        vocals_list.append(vocal)
+                
+                # feat. various의 경우 곡 문서에 직접 접속해 가수 정보를 가져옴
+                if 'various' in vocals_list:
+                    song_id = song['song']['id']
+                    song_data = self.api.get_song_details(song_id)
+                    
+                    vocals_list = []
+                    for vocal in song_data['artists']:
+                        if (vocal['categories'] == 'Vocalist' and 
+                            not vocal['isSupport']):
+                            vocalist_korean = get_korean_vocalist(vocal['name'])
+                            if vocalist_korean not in vocals_list:
+                                vocals_list.append(vocalist_korean)
+                
+                # 린렌 예외 처리
+                if ('카가미네 린·렌|카가미네 린' in vocals_list and 
+                    '카가미네 린·렌|카가미네 렌' in vocals_list):
+                    idx = min(vocals_list.index('카가미네 린·렌|카가미네 린'),
+                              vocals_list.index('카가미네 린·렌|카가미네 렌'))
+                    vocals_list = [v for v in vocals_list if v not in ('카가미네 린·렌|카가미네 린', '카가미네 린·렌|카가미네 렌')]
+                    vocals_list.insert(idx, '카가미네 린·렌')
+                
+                vocals_str = ', '.join(f"[[{v}]]" for v in vocals_list)
+            else:
+                vocals_str = ""
             
-            tracks.append(f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {artists_formatted} ||")
+            tracks.append(f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {vocals_str} ||")
             
         return '\n'.join(tracks)
 

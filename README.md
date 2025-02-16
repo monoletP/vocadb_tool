@@ -41,3 +41,11 @@ TODO: Dics 줄 자동추가
 <max_count>는 최신으로부터 몇 곡을 가져올 것인지를 정합니다. 예를 들어 아래와 같이 입력하면 울트라 트레일러와 (무)책임집합체만 가져옵니다.(25.02.16 기준 최신 2곡)
 
     python -m bin.song_list 121038 2
+
+다음 명령어를 사용해 artist_id가 아닌 곡 id들을 직접 입력해 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
+
+    python -m bin.song_list songs <song_id 1> <song_id 2> ...
+
+예를 들어 아래와 같이 입력하면 (무)책임집합체와 mochimochi를 가져옵니다.
+
+    python -m bin.song_list songs 667339 626191

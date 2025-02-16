@@ -12,9 +12,8 @@ def main():
                        help='Mode to run the script in. "full" generates the full album table, "only_link" extracts only the links, "utaite" accesses utaitedb.net.')
     args = parser.parse_args()
     
-    api = VocaDBAPI() if args.mode != 'utaite' else VocaDBAPI('utaitedb')
-    album_data = api.get_album_details(args.album_id)
-    formatter = AlbumFormatter(album_data)
+    site = 'vocadb' if args.mode != 'utaite' else 'utaitedb'
+    formatter = AlbumFormatter(album_id=args.album_id, site=site)
     formatted = formatter.format_album()
 
     pyperclip.copy(formatted)
