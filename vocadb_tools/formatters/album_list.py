@@ -19,11 +19,14 @@ class AlbumListFormatter:
             album_data = self.api.get_album_details(album['id'])
             
             # 트랙 번호 찾기
-            track_num = next(
-                (track['trackNumber'] for track in album_data['songs'] 
-                 if track['song']['id'] == self.song_id),
-                ''
-            )
+            track_num = ''
+            is_multi_disc = (album_data.get('songs', [])[-1].get('discNumber', 1) != 1)
+            for track in album_data.get('songs', []):
+                if track.get('song', {}).get('id') == self.song_id:
+                    disc_num = track.get('discNumber', -1)
+                    track_disc = f'Disc {disc_num}, ' if is_multi_disc else ''
+                    track_num = track_disc + str(track.get('trackNumber'))
+                    break
             
             # 앨범명과 번역 처리
             album_name = album['name']
