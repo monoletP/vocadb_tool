@@ -20,6 +20,9 @@ def main():
     # songs 모드 인자 설정
     songs_parser = subparsers.add_parser("songs", help="Receive a list of song IDs to format")
     songs_parser.add_argument("songs", type=int, nargs="+", help="The list of song IDs to format")
+    
+    # html 모드 인자 설정
+    html_parser = subparsers.add_parser("html", help="Receive HTML code and fetch song IDs")
 
     args = parser.parse_args()
 
@@ -32,8 +35,13 @@ def main():
         formatter = SongListFormatter(song_ids)
     elif args.mode == "songs":
         formatter = SongListFormatter(args.songs)
+    elif args.mode == "html":
+        html_code = pyperclip.paste()
+        scraper = VocaDBScraper()
+        song_ids = scraper.get_song_ids_from_html(html_code)
+        formatter = SongListFormatter(song_ids)
     else:
-        parser.error("mode 인자는 artist 또는 songs 중 하나여야 합니다.")
+        parser.error("mode 인자는 artist, songs, html 중 하나여야 합니다.")
         sys.exit()
     
     formatted_table = formatter.format_song_list()

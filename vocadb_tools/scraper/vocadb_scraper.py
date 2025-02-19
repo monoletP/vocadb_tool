@@ -31,24 +31,26 @@ class VocaDBScraper:
         self.base_url = self.BASE_URLS[site]
         self.session = requests.Session()
         
+    def get_song_ids_from_html(self, html: str) -> List[int]:
+        """
+        td 태그의 style이 "width: 80px;"인 내부의 a 태그에서 곡 ID 리스트를 추출합니다.
+        """
+        soup = BeautifulSoup(html, 'html.parser')
+        song_ids: List[int] = []
+        for td_tag in soup.find_all('td', style="width: 80px;"):
+            a_tag = td_tag.find('a', href=True)
+            if a_tag:
+                match = re.match(r'/S/(\d+)', a_tag['href'])
+                if match:
+                    song_ids.append(int(match.group(1)))
+        return song_ids
+        
     def get_song_list(self, artist_id: int, song_type: str = "Original", max_count: int = 1000) -> List[int]:
         """
         가수의 곡 목록에서 곡 ID 리스트를 가져옵니다.
         Selenium을 사용해 JavaScript 렌더링이 필요한 페이지의 HTML을 가져옵니다.
         max_count 개 이상의 곡 ID를 수집하면 반복을 종료합니다.
         """
-        def get_song_ids_from_html(soup: BeautifulSoup) -> List[int]:
-            """
-            td 태그의 style이 "width: 80px;"인 내부의 a 태그에서 곡 ID 리스트를 추출합니다.
-            """
-            song_ids: List[int] = []
-            for td_tag in soup.find_all('td', style="width: 80px;"):
-                a_tag = td_tag.find('a', href=True)
-                if a_tag:
-                    match = re.match(r'/S/(\d+)', a_tag['href'])
-                    if match:
-                        song_ids.append(int(match.group(1)))
-            return song_ids
         
         url = f"{self.base_url}/Search"
         params = {
@@ -95,9 +97,8 @@ class VocaDBScraper:
 
                 time.sleep(1)
                 html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
                 
-                song_ids: List[int] = get_song_ids_from_html(soup)
+                song_ids: List[int] = self.get_song_ids_from_html(html)
                 if not song_ids:
                     break
                 all_song_ids.extend(song_ids)

@@ -30,6 +30,8 @@ TODO: Dics 줄 자동추가
     python -m bin.album_list 321205
 
 ### 프로듀서의 투고곡 목록 표 생성하기
+
+#### 입력: 아티스트 id
 다음 명령어를 사용해 입력한 artist_id에 해당하는 프로듀서 문서의 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
 
     python -m bin.song_list <artist_id> <max_count>
@@ -42,6 +44,7 @@ TODO: Dics 줄 자동추가
 
     python -m bin.song_list 121038 2
 
+#### 입력: 곡 id들
 다음 명령어를 사용해 artist_id가 아닌 곡 id들을 직접 입력해 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
 
     python -m bin.song_list songs <song_id 1> <song_id 2> ...
@@ -49,3 +52,8 @@ TODO: Dics 줄 자동추가
 예를 들어 아래와 같이 입력하면 (무)책임집합체와 mochimochi를 가져옵니다.
 
     python -m bin.song_list songs 667339 626191
+
+#### 입력: html 코드
+다음 명령어를 사용해 클립보드에 복사된 html 코드로부터 곡 id들을 추출해 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다. [참고](https://gall.dcinside.com/mgallery/board/view?id=mikuhatsune&no=230899)
+
+    python -m bin.song_list html
