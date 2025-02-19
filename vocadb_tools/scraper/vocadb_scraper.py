@@ -37,7 +37,7 @@ class VocaDBScraper:
         """
         soup = BeautifulSoup(html, 'html.parser')
         song_ids: List[int] = []
-        for td_tag in soup.find_all('td', style="width: 80px;"):
+        for td_tag in soup.find_all('td', style={"width: 80px;", "width: 75px;"}):
             a_tag = td_tag.find('a', href=True)
             if a_tag:
                 match = re.match(r'/S/(\d+)', a_tag['href'])

@@ -13,6 +13,12 @@ def format_dtdate_korean(date_obj: datetime) -> str:
     """
     return f"{date_obj.year}년 {date_obj.month}월 {date_obj.day}일"
 
+def format_dtdate_short(date_obj: datetime) -> str:
+    """
+    datetime으로 저장된 날짜를 짧은 형식으로 변환합니다.
+    """
+    return f"{(date_obj.year % 100):02}/{date_obj.month:02}/{date_obj.day:02}"
+
 def format_media_links(weblinks: List[Dict]) -> str:
     """
     미디어 링크들을 위키 문법으로 변환합니다.
