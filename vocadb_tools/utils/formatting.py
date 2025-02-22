@@ -54,7 +54,7 @@ def format_media_links(weblinks: List[Dict]) -> str:
         if link.get('disabled', True):
             continue
 
-        if link.get('category', '') != 'Commercial':
+        if 'category' in link and link.get('category', '') != 'Commercial':
             continue
 
         service_field = link.get('description', link.get('service'))
