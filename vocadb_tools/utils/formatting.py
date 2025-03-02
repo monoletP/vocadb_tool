@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Dict, List
+from vocadb_tools.utils.mappings import get_korean_vocalist
 
 def format_dictdate_korean(date_dict: Dict) -> str:
     """
@@ -103,3 +104,37 @@ def format_media_links(weblinks: List[Dict]) -> str:
     formatted_links = (link for _, link in formatted_links_with_order)
             
     return ''.join(formatted_links)
+
+def format_vocal_links(vocalists: List[str]) -> str:
+    """
+    가수들의 이름을 위키 문법으로 변환합니다.
+    """
+    output = []
+    for v in vocalists:
+        vocal_format = get_korean_vocalist(v)
+        if vocal_format not in output:
+            output.append(vocal_format)
+        
+    # 린렌 예외 처리
+    if ('카가미네 린·렌|카가미네 린' in output and
+        '카가미네 린·렌|카가미네 렌' in output):
+        idx = min(output.index('카가미네 린·렌|카가미네 린'),
+                    output.index('카가미네 린·렌|카가미네 렌'))
+        output = [v for v in output if v not in (
+            '카가미네 린·렌|카가미네 린', '카가미네 린·렌|카가미네 렌')]
+        output.insert(idx, '카가미네 린·렌')
+    
+    return ', '.join({f"[[{v}]]" for v in output})
+
+def parse_artist_vocals(artist_data: Dict) -> str:
+    """
+    아티스트 데이터에서 가수들의 이름을 위키 문법으로 변환합니다.
+    """
+    vocalists = []
+    for artist in artist_data:
+        if artist['categories'] == 'Vocalist' and not artist['isSupport']:
+            vocal_korean = get_korean_vocalist(artist['name'])
+            if vocal_korean not in vocalists:
+                vocalists.append(vocal_korean)
+    
+    return format_vocal_links(vocalists)

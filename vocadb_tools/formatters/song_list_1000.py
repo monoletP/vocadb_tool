@@ -2,8 +2,7 @@ from typing import Dict, List
 from datetime import datetime
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
-from vocadb_tools.utils.formatting import format_dtdate_short
-from vocadb_tools.utils.mappings import get_korean_vocalist
+from vocadb_tools.utils.formatting import format_dtdate_short, parse_artist_vocals
 
 class SongListFormatter1000:
     def __init__(self, song_ids: List[int]):
@@ -62,29 +61,13 @@ class SongListFormatter1000:
             else:
                 name_row = f"||<-2> {name}"
 
-            # 가수 목록 처리 (중복 제거하며 순서 유지), 프료듀서 처리
-            vocals_list = []
+            # 프로듀서 처리
             producer_list = []
             for artist in song_data['artists']:
-                if artist['categories'] == 'Vocalist' and not artist['isSupport']:
-                    vocal_korean = get_korean_vocalist(artist['name'])
-                    if vocal_korean not in vocals_list:
-                        vocals_list.append(vocal_korean)
-                elif 'Producer' in [cat.strip() for cat in artist['categories'].split(',')] and not artist['isSupport']:
+                if 'Producer' in [cat.strip() for cat in artist['categories'].split(',')] and not artist['isSupport']:
                     producer_list.append(artist['name'])
-                    
-            if vocals_list == []:  # 가수가 없는 경우
-                continue
-
-            # 린렌 예외 처리
-            if ('카가미네 린·렌|카가미네 린' in vocals_list and 
-                '카가미네 린·렌|카가미네 렌' in vocals_list):
-                idx = min(vocals_list.index('카가미네 린·렌|카가미네 린'),
-                            vocals_list.index('카가미네 린·렌|카가미네 렌'))
-                vocals_list = [v for v in vocals_list if v not in ('카가미네 린·렌|카가미네 린', '카가미네 린·렌|카가미네 렌')]
-                vocals_list.insert(idx, '카가미네 린·렌')
             
-            vocals_str = ', '.join(f"[[{v}]]" for v in vocals_list)
+            vocals_str = parse_artist_vocals(song_data['artists'])
             producer_str = ', '.join(f"[[{p}]]" for p in producer_list)
 
             # 투고일, 투고일(유튜브) 처리

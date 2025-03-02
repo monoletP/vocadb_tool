@@ -2,8 +2,7 @@ from typing import Dict, List
 from datetime import datetime
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
-from vocadb_tools.utils.formatting import format_dtdate_korean
-from vocadb_tools.utils.mappings import get_korean_vocalist
+from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals
 
 class SongListFormatter:
     def __init__(self, song_ids: List[int]):
@@ -73,24 +72,8 @@ class SongListFormatter:
                 name_row = f"||  || {name} ||"
             else:
                 name_row = f"||<-2> {name} ||"
-
-            # 가수 목록 처리 (중복 제거하며 순서 유지)
-            vocals_list = []
-            for vocal in song_data['artists']:
-                if vocal['categories'] == 'Vocalist' and not vocal['isSupport']:
-                    vocal_korean = get_korean_vocalist(vocal['name'])
-                    if vocal_korean not in vocals_list:
-                        vocals_list.append(vocal_korean)
-
-            # 린렌 예외 처리
-            if ('카가미네 린·렌|카가미네 린' in vocals_list and 
-                '카가미네 린·렌|카가미네 렌' in vocals_list):
-                idx = min(vocals_list.index('카가미네 린·렌|카가미네 린'),
-                            vocals_list.index('카가미네 린·렌|카가미네 렌'))
-                vocals_list = [v for v in vocals_list if v not in ('카가미네 린·렌|카가미네 린', '카가미네 린·렌|카가미네 렌')]
-                vocals_list.insert(idx, '카가미네 린·렌')
-            
-            vocals_str = ', '.join(f"[[{v}]]" for v in vocals_list)
+           
+            vocals_format = parse_artist_vocals(song_data['artists'])
 
             # 미디어 링크와 공개일 처리
             media_links, pub_date = self._format_media_icons(
@@ -101,7 +84,7 @@ class SongListFormatter:
 
                 # 최종 출력 행 구성
                 output_row = (
-                    f"{name_row} {vocals_str} || {media_links} || "
+                    f"{name_row} {vocals_format} || {media_links} || "
                     f"{formatted_date} || ||"
                 )
                 output_list.append((pub_date, output_row))
