@@ -50,7 +50,18 @@ class AlbumFormatter:
         tracks = []
         tracks.append("||<colkeepall><rowbgcolor=#DCDCDC,#2d2f34><width=9%> '''트랙''' ||<-2><width=70%> '''제목''' ||<width=21%> '''가수''' ||")
         
+        has_multiple_discs = len(self.album_data['discs']) > 1
+        if has_multiple_discs:
+            disc_name = self.album_data['discs']["1"].get('name', '')
+            tracks.append(f"||<-4><rowbgcolor=#DCDCDC,#2d2f34> {{{{{{-1 '''Disc 1{' - ' if disc_name else ''}{disc_name}'''}}}}}} ||")
+        cur_disc = 1
+        
         for song in self.album_data['songs']:
+            if has_multiple_discs and song['discNumber'] != cur_disc:
+                cur_disc = song['discNumber']
+                disc_name = self.album_data['discs'][str(cur_disc)].get('name', '')
+                tracks.append(f"||<-4><rowbgcolor=#DCDCDC,#2d2f34> {{{{{{-1 '''Disc {cur_disc}{' - ' if disc_name else ''}{disc_name}'''}}}}}} ||")
+            
             track_num = song['trackNumber']
             name = song['name']
             translation = " {{{-3 {{{#gray ()}}}}}}" if is_japanese(name) else ""
