@@ -32,7 +32,7 @@ class AlbumFormatter:
         output = [
             f"=== Album 《{album_name}》 ===",
             f"||<tablewidth=600px><tablealign=center><tablebgcolor=#ffffff,#2d2f34><tablebordercolor=#282a3e><-{5 if self.is_compilation else 4}> {{{{{{-2 Album}}}}}}[br]'''{{{{{{+2 {album_name}}}}}}}'''{ko_name} ||",
-            f"||<bgcolor=#fff,#1f2023><nopad><-{5 if self.is_compilation else 4}> [[파일:빈 가로 이미지.svg|width=100%]] ||",
+            f"||<bgcolor=#fff,#1f2023><nopad><-{5 if self.is_compilation else 4}> [[파일:빈 정사각형 이미지.svg|width=100%]] ||",
             f"||<-2><width=15%><bgcolor=#DCDCDC,#2d2f34> '''발매일''' ||<-{3 if self.is_compilation else 2}><width=85%> {release_date} ||"
         ]
 
