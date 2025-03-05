@@ -9,13 +9,14 @@ setup(
         "beautifulsoup4>=4.12.0",
         "pyperclip>=1.8.2",
         "langdetect>=1.0.9",
-        "googletrans>=3.1.0"
+        "selenium>=4.9.0"
     ],
     entry_points={
         "console_scripts": [
-            "vocadb-album=vocadb_tools.bin.vocadb_album:main",
-            "vocadb-albumlist=vocadb_tools.bin.vocadb_albumlist:main",
-            "vocadb-songlist=vocadb_tools.bin.vocadb_songlist:main"
+            "vocadb-album=bin.album:main",
+            "vocadb-albumlist=bin.album_list:main",
+            "vocadb-songlist=bin.song_list:main",
+            "vocadb-songlist1000=bin.song_list_1000:main"
         ]
     }
 )
