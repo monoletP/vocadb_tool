@@ -2,7 +2,7 @@ from typing import Dict, List
 from datetime import datetime
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
-from vocadb_tools.utils.formatting import format_dtdate_short, parse_artist_vocals
+from vocadb_tools.utils.formatting import format_dtdate_short, parse_artist_vocals, parse_producer
 
 class SongListFormatter1000:
     def __init__(self, song_ids: List[int]):
@@ -60,15 +60,9 @@ class SongListFormatter1000:
                 name_row = f"||  || {name}"
             else:
                 name_row = f"||<-2> {name}"
-
-            # 프로듀서 처리
-            producer_list = []
-            for artist in song_data['artists']:
-                if 'Producer' in [cat.strip() for cat in artist['categories'].split(',')] and not artist['isSupport']:
-                    producer_list.append(artist['name'])
             
             vocals_str = parse_artist_vocals(song_data['artists'])
-            producer_str = ', '.join(f"[[{p}]]" for p in producer_list)
+            producer_str = parse_producer(song_data['artists'])
 
             # 투고일, 투고일(유튜브) 처리
             pub_date, yt_date = self._get_publish_date(

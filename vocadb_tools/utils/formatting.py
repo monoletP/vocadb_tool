@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Dict, List
-from vocadb_tools.utils.mappings import get_korean_vocalist
+from vocadb_tools.utils.mappings import get_vocalist_korean_name, get_producer_korean_name
 
 def format_dictdate_korean(date_dict: Dict) -> str:
     """
@@ -111,7 +111,7 @@ def format_vocal_links(vocalists: List[str]) -> str:
     """
     output = []
     for v in vocalists:
-        vocal_format = get_korean_vocalist(v)
+        vocal_format = get_vocalist_korean_name(v)
         if vocal_format not in output:
             output.append(vocal_format)
         
@@ -133,8 +133,30 @@ def parse_artist_vocals(artist_data: Dict) -> str:
     vocalists = []
     for artist in artist_data:
         if artist['categories'] == 'Vocalist' and not artist['isSupport']:
-            vocal_korean = get_korean_vocalist(artist['name'])
+            vocal_korean = get_vocalist_korean_name(artist['name'])
             if vocal_korean not in vocalists:
                 vocalists.append(vocal_korean)
     
     return format_vocal_links(vocalists)
+
+def format_producer_links(producers: List[str]) -> str:
+    """
+    프로듀서들의 이름을 위키 문법으로 변환합니다.
+    """
+    output = []
+    for p in producers:
+        producer_format = get_producer_korean_name(p)
+        output.append(producer_format)
+    
+    return ', '.join({f"[[{p}]]" for p in output})
+
+def parse_producer(artist_data: Dict) -> str:
+    """
+    아티스트 데이터에서 프로듀서들의 이름을 위키 문법으로 변환합니다.
+    """
+    producers = []
+    for artist in artist_data:
+        if 'Producer' in [cat.strip() for cat in artist['categories'].split(',')] and not artist['isSupport']:
+            producers.append(artist['name'])
+    
+    return format_producer_links(producers)

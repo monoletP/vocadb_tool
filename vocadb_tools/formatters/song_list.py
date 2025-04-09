@@ -61,6 +61,7 @@ class SongListFormatter:
         곡 목록을 위키 문법으로 포맷팅합니다.
         """
         output_list = []
+        print(self.song_ids)
 
         for song_id in self.song_ids:
             song_data = self.api.get_song_details(song_id)

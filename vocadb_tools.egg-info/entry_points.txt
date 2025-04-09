@@ -1,0 +1,5 @@
+[console_scripts]
+vocadb-album = bin.album:main
+vocadb-albumlist = bin.album_list:main
+vocadb-songlist = bin.song_list:main
+vocadb-songlist1000 = bin.song_list_1000:main

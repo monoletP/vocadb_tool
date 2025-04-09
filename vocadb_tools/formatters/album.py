@@ -1,6 +1,6 @@
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
-from vocadb_tools.utils.formatting import format_dictdate_korean, format_media_links, format_vocal_links, parse_artist_vocals
+from vocadb_tools.utils.formatting import format_dictdate_korean, format_media_links, format_vocal_links, parse_artist_vocals, format_producer_links
 
 
 class AlbumFormatter:
@@ -84,6 +84,8 @@ class AlbumFormatter:
             if 'song' in song:
                 vocal_string = song['song']['artistString'].split(" feat. ")[-1].strip()
                 vocals_format = ''
+                producer_string = song['song']['artistString'].split(" feat. ")[0].strip()
+                producer_format = format_producer_links(producer_string.split(',')) if producer_string else ""
                 
                 if vocal_string == 'various':
                     song_id = song['song']['id']
@@ -94,10 +96,11 @@ class AlbumFormatter:
                 else: vocals_format = format_vocal_links(vocal_string.split(',')) if vocal_string else ""
             else:
                 vocals_format = ""
+                producer_format = ""
 
             if self.is_compilation:
                 tracks.append(
-                    f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {vocals_format} || {song['song']['artistString'].split(' feat. ')[0]} ||")
+                    f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {vocals_format} || {producer_format} ||")
             else:
                 tracks.append(
                     f"|| '''{track_num:02d}''' ||<-2>{name}{translation} || {vocals_format} ||")
