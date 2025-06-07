@@ -88,9 +88,8 @@ def format_media_links(weblinks: List[Dict]) -> str:
             order_index = ordering['apple']
             url = url.replace('itunes', 'music')
             formatted_link = f"[[{url}|{icons['apple']}]]"
-        elif service in ['itunes', 'itunes (jp)']:
+        elif service in ['apple music', 'apple music (jp)']:
             order_index = ordering['apple']
-            url = url.replace('itunes', 'music')
             formatted_link = f"[[{url}|{icons['apple']}]]"
         elif service in ordering:
             order_index = ordering[service]

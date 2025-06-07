@@ -115,3 +115,11 @@ class AlbumFormatter:
         track_list = self._format_track_list()
 
         return f"{album_info}\n{track_list}"
+    
+    def format_album_links(self) -> str:
+        """
+        앨범 스트리밍 링크를 위키 문법으로 포맷팅합니다.
+        """
+        weblinks = self.album_data.get('webLinks', [])
+        media_links = format_media_links(weblinks)
+        return media_links

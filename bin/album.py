@@ -13,8 +13,9 @@ def main():
     args = parser.parse_args()
     
     site = 'vocadb' if args.mode != 'utaite' else 'utaitedb'
+    
     formatter = AlbumFormatter(album_id=args.album_id, site=site)
-    formatted = formatter.format_album()
+    formatted = formatter.format_album() if args.mode != 'only_link' else formatter.format_album_links()
 
     pyperclip.copy(formatted)
     print(formatted)
