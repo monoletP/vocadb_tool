@@ -34,7 +34,7 @@ class AlbumFormatter:
             f"=== Album 《{album_name}》 ===",
             f"||<tablewidth=600px><tablealign=center><tablebgcolor=#ffffff,#2d2f34><tablebordercolor=#282a3e><-{col_padding}> {{{{{{-2 Album}}}}}}[br]'''{{{{{{+2 {album_name}}}}}}}'''{ko_name} ||",
             f"||<bgcolor=#fff,#1f2023><nopad><-{col_padding}> [[파일:빈 정사각형 이미지.svg|width=100%]] ||",
-            f"||<-2><width=15%><bgcolor=#DCDCDC,#2d2f34> '''발매일''' ||<-{title_padding}><width=85%> {release_date} ||"
+            f"||<colkeepall><-2><width=15%><bgcolor=#DCDCDC,#2d2f34> '''발매일''' ||<-{title_padding}><width=85%> {release_date} ||"
         ]
 
         extra_fields = {
@@ -57,10 +57,10 @@ class AlbumFormatter:
         tracks = []
         if self.is_compilation:
             tracks.append(
-                "||<colkeepall><rowbgcolor=#DCDCDC,#2d2f34><width=9%> '''트랙''' ||<-2><width=50%> '''제목''' ||<width=21%> '''가수''' ||<width=20%> '''아티스트''' ||")
+                "||<rowbgcolor=#DCDCDC,#2d2f34><width=9%> '''트랙''' ||<-2><width=50%> '''제목''' ||<width=21%> '''가수''' ||<width=20%> '''아티스트''' ||")
         else:
             tracks.append(
-                "||<colkeepall><rowbgcolor=#DCDCDC,#2d2f34><width=9%> '''트랙''' ||<-2><width=70%> '''제목''' ||<width=21%> '''가수''' ||")
+                "||<rowbgcolor=#DCDCDC,#2d2f34><width=9%> '''트랙''' ||<-2><width=70%> '''제목''' ||<width=21%> '''가수''' ||")
 
         has_multiple_discs = len(self.album_data['discs']) > 1
         if has_multiple_discs:
