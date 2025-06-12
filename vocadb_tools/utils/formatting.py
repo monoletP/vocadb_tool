@@ -25,7 +25,7 @@ def format_media_links(weblinks: List[Dict]) -> str:
     미디어 링크들을 위키 문법으로 변환합니다.
     """
     icons = {
-        'amazon': "[[파일:아마존닷컴 아이콘.svg|width=24]]",
+        'amazon': "[[파일:아마존닷컴 아이콘.svg|width=24&bgcolor=white]]",
         'apple': "[[파일:Apple Music 아이콘.svg|width=24]]",
         'spotify': "[[파일:스포티파이 아이콘.svg|width=24]]",
         'youtube': "[[파일:유튜브 아이콘.svg|width=27]]",
