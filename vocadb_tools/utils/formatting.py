@@ -123,7 +123,7 @@ def format_vocal_links(vocalists: List[str]) -> str:
             '카가미네 린·렌|카가미네 린', '카가미네 린·렌|카가미네 렌')]
         output.insert(idx, '카가미네 린·렌')
     
-    return ', '.join({f"[[{v}]]" for v in output})
+    return '[br]'.join({f"[[{v}]]" for v in output})
 
 def parse_artist_vocals(artist_data: Dict) -> str:
     """
@@ -147,7 +147,7 @@ def format_producer_links(producers: List[str]) -> str:
         producer_format = get_producer_korean_name(p)
         output.append(producer_format)
     
-    return ', '.join({f"[[{p}]]" for p in output})
+    return '[br]'.join({f"[[{p}]]" for p in output})
 
 def parse_producer(artist_data: Dict) -> str:
     """
