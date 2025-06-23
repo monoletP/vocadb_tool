@@ -1,8 +1,0 @@
-README.md
-setup.py
-vocadb_tools.egg-info/PKG-INFO
-vocadb_tools.egg-info/SOURCES.txt
-vocadb_tools.egg-info/dependency_links.txt
-vocadb_tools.egg-info/entry_points.txt
-vocadb_tools.egg-info/requires.txt
-vocadb_tools.egg-info/top_level.txt
