@@ -5,14 +5,14 @@ from vocadb_tools.utils.language import is_japanese
 from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals
 
 class SongListFormatter:
-    def __init__(self, song_ids: List[int]):
+    def __init__(self, song_ids: List[int], site: str = 'vocadb'):
         """
         곡 id 리스트를 받아 포맷팅하는 클래스입니다.
         
         Args:
             song_ids (List[int]): VocaDB의 곡 ID 리스트.
         """
-        self.api = VocaDBAPI()
+        self.api = VocaDBAPI(site=site)
         self.song_ids = song_ids
 
     def _format_media_icons(self, pvs: List[Dict]) -> (str, datetime):

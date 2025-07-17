@@ -5,7 +5,7 @@ from vocadb_tools.utils.formatting import format_dictdate_korean, format_media_l
 
 class AlbumFormatter:
     def __init__(self, album_id: int, site: str = 'vocadb'):
-        self.api = VocaDBAPI() if site != 'utaitedb' else VocaDBAPI('utaitedb')
+        self.api = VocaDBAPI(site=site)
         self.album_id = album_id
         self.album_data = self.api.get_album_details(album_id)
         self.is_compilation = self.album_data['discType'] == 'Compilation'

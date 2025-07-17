@@ -3,8 +3,8 @@ from vocadb_tools.utils.formatting import format_dictdate_korean, format_media_l
 from vocadb_tools.api.vocadb import VocaDBAPI
 
 class AlbumListFormatter:
-    def __init__(self, song_id: int):
-        self.api = VocaDBAPI()
+    def __init__(self, song_id: int, site: str = 'vocadb'):
+        self.api = VocaDBAPI(site=site)
         self.song_id = song_id
         self.song_data = self.api.get_song_details(song_id)
         

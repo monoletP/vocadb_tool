@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML에서 곡 목록 추출 - VocaDB Tool</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px; 
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-section { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        textarea { 
+            margin: 5px; 
+            padding: 8px; 
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            font-family: monospace;
+        }
+        button { 
+            padding: 10px 20px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #0056b3; }
+        .result, .error { 
+            margin: 20px 0; 
+            padding: 20px; 
+            border-radius: 8px;
+        }
+        .result { 
+            background: #d4edda; 
+            border: 1px solid #c3e6cb; 
+            color: #155724;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .input-textarea {
+            height: 200px;
+        }
+        .result-textarea {
+            height: 300px;
+        }
+        .back-btn {
+            background: #6c757d;
+            margin-right: 10px;
+        }
+        .back-btn:hover { background: #545b62; }
+        .description {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTML에서 곡 목록 추출</h1>
+        <a href="/" class="back-btn" style="padding: 8px 16px; color: white; text-decoration: none; border-radius: 4px;">← 메인으로</a>
+        
+        <div class="description">
+            <p><strong>사용법:</strong> VocaDB 페이지의 HTML 코드를 붙여넣으면 그 안에서 곡 ID를 자동으로 추출하여 곡 목록을 생성합니다.</p>
+            <p><strong>대상:</strong> width가 80px 또는 75px인 td 태그 내의 /S/숫자 형태의 링크를 찾습니다.</p>
+        </div>
+        
+        <div class="warning">
+            <strong>주의:</strong> 페이지 전체 소스코드를 붙여넣으세요. 브라우저에서 F12 → Elements → 전체 선택 후 복사하시면 됩니다.
+        </div>
+
+        <div class="form-section">
+            <label>사이트:
+                <select name="site">
+                    <option value="vocadb" {% if site == 'vocadb' %}selected{% endif %}>VocaDB</option>
+                    <option value="utaite" {% if site == 'utaite' %}selected{% endif %}>UtaiteDB</option>
+                </select>
+            </label>
+        </div>
+        
+        <div class="form-section">
+            <form method="post">
+                <label>HTML 내용:</label><br>
+                <textarea name="html_content" class="input-textarea" required 
+                          placeholder="HTML 코드를 여기에 붙여넣으세요...">{% if html_content %}{{ html_content }}{% endif %}</textarea>
+                <br><br>
+                <button type="submit">곡 목록 추출</button>
+            </form>
+        </div>
+
+        {% if message %}
+        <div class="result">
+            <h3>{{ message }}</h3>
+            <textarea readonly class="result-textarea">{{ result }}</textarea>
+            <br><br>
+            <button onclick="copyToClipboard()">클립보드에 복사</button>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">
+            <h3>오류 발생</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const textarea = document.querySelector('.result-textarea');
+            textarea.select();
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다!');
+        }
+    </script>
+</body>
+</html>
