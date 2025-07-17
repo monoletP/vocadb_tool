@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from vocadb_tools.formatters.album import AlbumFormatter
-from vocadb_tools.api.vocadb import VocaDBAPI
 import argparse
 import pyperclip
 

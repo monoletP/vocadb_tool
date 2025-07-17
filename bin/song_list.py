@@ -3,7 +3,8 @@ import sys
 import argparse
 import pyperclip
 from vocadb_tools.formatters.song_list import SongListFormatter
-from vocadb_tools.scraper.vocadb_scraper import VocaDBScraper
+from vocadb_tools.api.vocadb import VocaDBAPI
+from vocadb_tools.scraper.vocadb_scraper import get_song_ids_from_html
 
 def main():
     parser = argparse.ArgumentParser(description="Generate song list table from VocaDB")
@@ -30,15 +31,14 @@ def main():
         # artist 모드의 경우 artist_id 인자가 반드시 필요합니다.
         if not hasattr(args, "artist_id"):
             parser.error("artist 모드에서는 artist_id 인자가 필수입니다.")
-        scraper = VocaDBScraper()
-        song_ids = scraper.get_song_list(args.artist_id, song_type=args.song_type, max_count=args.max_count)
+        api = VocaDBAPI()
+        song_ids = api.get_song_list(args.artist_id, song_type=args.song_type, max_count=args.max_count)
         formatter = SongListFormatter(song_ids)
     elif args.mode == "songs":
         formatter = SongListFormatter(args.songs)
     elif args.mode == "html":
         html_code = pyperclip.paste()
-        scraper = VocaDBScraper()
-        song_ids = scraper.get_song_ids_from_html(html_code)
+        song_ids = get_song_ids_from_html(html_code)
         formatter = SongListFormatter(song_ids)
     else:
         parser.error("mode 인자는 artist, songs, html 중 하나여야 합니다.")
