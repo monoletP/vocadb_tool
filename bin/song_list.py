@@ -14,7 +14,7 @@ def main():
     artist_parser = subparsers.add_parser("artist", help="Receive artist id and fetch song list")
     artist_parser.add_argument("artist_id", type=int, help="The ID of the artist to fetch data for")
     artist_parser.add_argument("--song_type", type=str, default="Original",
-                               choices=["Original", "Cover", "Remix", "Instrumental", "Mashup", "MusicPV", "DramaPV", "Other"],
+                               choices=["Unspecified", "Original", "Cover", "Remix", "Instrumental", "Mashup", "MusicPV", "DramaPV", "Other"],
                                help="The type of songs to fetch")
     artist_parser.add_argument("--max_count", type=int, default=1000, help="The maximum number of songs to fetch")
 

@@ -32,15 +32,17 @@ mode는 full, only_link, utaite 세 가지가 있습니다. 기본값은 full입
 #### 입력: 아티스트 id
 다음 명령어를 사용해 입력한 artist_id에 해당하는 프로듀서 문서의 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다. (chromedriver.exe를 최상단 폴더에 위치시켜야 함)
 
-    python -m bin.song_list <artist_id> <max_count>
+    python -m bin.song_list <artist_id> --song_type Unspecified --max_count <max_count>
 
 <artist_id>는 프로듀서 창의 주소에서 /Ar/ 뒤의 숫자입니다. 예를 들어 프로듀서 [マサラダ](https://vocadb.net/Ar/121038)의 곡 목록 표를 생성한다면 다음과 같이 입력합니다.
 
     python -m bin.song_list 121038
 
+<song_type>은 vocadb의 Song type을 선택합니다. 기본값은 Original입니다.
+
 <max_count>는 최신으로부터 몇 곡을 가져올 것인지를 정합니다. 예를 들어 아래와 같이 입력하면 울트라 트레일러와 (무)책임집합체만 가져옵니다.(25.02.16 기준 최신 2곡)
 
-    python -m bin.song_list 121038 2
+    python -m bin.song_list 121038 --max_count 2
 
 #### 입력: 곡 id들
 다음 명령어를 사용해 artist_id가 아닌 곡 id들을 직접 입력해 곡 목록 표를 생성할 수 있습니다. 결과는 클립보드에 복사됩니다.
