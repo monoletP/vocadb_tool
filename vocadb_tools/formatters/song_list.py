@@ -2,7 +2,7 @@ from typing import Dict, List
 from datetime import datetime
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
-from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals
+from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals, convert_utc_to_kst
 
 class SongListFormatter:
     def __init__(self, song_ids: List[int], site: str = 'vocadb'):
@@ -47,6 +47,7 @@ class SongListFormatter:
             pub_date = datetime.fromisoformat(
                 pv.get('publishDate', '2100-01-01T00:00:00')
             )
+            pub_date = convert_utc_to_kst(pub_date)
             if pub_date < earliest_date:
                 earliest_date = pub_date
 
