@@ -1,0 +1,48 @@
+steps:
+  # Docker 이미지 빌드
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/vocadb-tool', '.']
+  
+  # Docker 이미지를 Container Registry에 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/vocadb-tool']
+  
+  # Cloud Run에 배포
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'vocadb-tool'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/vocadb-tool'
+      - '--region'
+      - 'asia-northeast3'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
+      # 동시성 제한 (인스턴스당 동시 요청 수)
+      - '--concurrency'
+      - '80'
+      # 최대 인스턴스 수 제한 (비용 및 DDoS 방지)
+      - '--max-instances'
+      - '10'
+      # 최소 인스턴스 수 (0으로 설정하면 cold start 있음)
+      - '--min-instances'
+      - '0'
+      # 요청 타임아웃 (초)
+      - '--timeout'
+      - '60'
+      # CPU 할당 (요청 처리 중에만 할당)
+      - '--cpu'
+      - '1'
+      # 메모리 제한
+      - '--memory'
+      - '512Mi'
+      # CPU 스로틀링 (요청 없을 때 CPU 할당 안 함)
+      - '--cpu-throttling'
+
+images:
+  - 'gcr.io/$PROJECT_ID/vocadb-tool'
