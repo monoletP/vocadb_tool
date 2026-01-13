@@ -1,23 +1,13 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from typing import Dict, List
 from vocadb_tools.utils.mappings import get_vocalist_korean_name, get_producer_korean_name
-
-# 한국 시간대 (UTC+9)
-KST = timezone(timedelta(hours=9))
 
 def format_dictdate_korean(date_dict: Dict) -> str:
     """
     딕셔너리로 저장된 날짜를 한국어 형식으로 변환합니다.
     """
     return f"{date_dict['year']}년 {date_dict['month']}월 {date_dict['day']}일"
-def convert_utc_to_kst(date_obj: datetime) -> datetime:
-    """
-    UTC 시간을 KST(UTC+9)로 변환합니다.
-    timezone 정보가 없는 datetime 객체는 UTC로 간주합니다.
-    """
-    if date_obj.tzinfo is None:
-        date_obj = date_obj.replace(tzinfo=timezone.utc)
-    return date_obj.astimezone(KST)
+
 def format_dtdate_korean(date_obj: datetime) -> str:
     """
     datetime로 저장된 날짜를 한국어 형식으로 변환합니다.
