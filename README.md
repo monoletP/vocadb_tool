@@ -4,6 +4,27 @@
 
 [사이트](https://vocadb-tool-1024514772433.asia-northeast1.run.app)
 
+## 환경 설정
+
+### YouTube API 키 설정 (선택 사항)
+
+정확한 투고 시각(UTC+9 기준 날짜)을 가져오려면 YouTube Data API v3 키가 필요합니다:
+
+1. [Google Cloud Console](https://console.cloud.google.com) 접속
+2. 프로젝트 생성 또는 선택
+3. "API 및 서비스" > "라이브러리"에서 "YouTube Data API v3" 활성화
+4. "사용자 인증 정보" > "API 키 만들기"
+5. 환경 변수 설정:
+   ```bash
+   # Windows (PowerShell)
+   $env:YOUTUBE_API_KEY="YOUR_API_KEY_HERE"
+   
+   # Linux/Mac
+   export YOUTUBE_API_KEY="YOUR_API_KEY_HERE"
+   ```
+
+**참고:** API 키 없이도 사용 가능하지만, VocaDB의 날짜 정보(자정 기준)를 사용합니다.
+
 ## 사용법
 
 ### 앨범 정보 가져오기

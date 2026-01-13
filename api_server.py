@@ -9,12 +9,16 @@ from vocadb_tools.formatters.album import AlbumFormatter
 from vocadb_tools.formatters.song_list import SongListFormatter
 from vocadb_tools.scraper.vocadb_scraper import get_song_ids_from_html
 import logging
+import os
 
 app = FastAPI(title="VocaDB Tool API", version="1.0.0")
 templates = Jinja2Templates(directory="templates")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# YouTube API 키 (환경 변수에서 가져오기)
+YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY")
 
 # 메인 페이지
 @app.get("/", response_class=HTMLResponse)
@@ -127,7 +131,7 @@ async def song_list_songs_form(request: Request, song_ids: str = Form(...), site
     try:
         # 쉼표로 구분된 곡 ID들을 파싱
         song_id_list = [int(id.strip()) for id in song_ids.split(',') if id.strip()]
-        formatter = SongListFormatter(song_id_list, site=site)
+        formatter = SongListFormatter(song_id_list, site=site, youtube_api_key=YOUTUBE_API_KEY)
         formatted = formatter.format_song_list()
         
         return templates.TemplateResponse("song_list_songs.html", {
@@ -147,7 +151,7 @@ async def song_list_songs_form(request: Request, song_ids: str = Form(...), site
 async def song_list_html_form(request: Request, html_content: str = Form(...), site: str = Form("vocadb")):
     try:
         song_ids = get_song_ids_from_html(html_content)
-        formatter = SongListFormatter(song_ids, site=site)
+        formatter = SongListFormatter(song_ids, site=site, youtube_api_key=YOUTUBE_API_KEY)
         formatted = formatter.format_song_list()
         
         return templates.TemplateResponse("song_list_html.html", {

@@ -1,24 +1,29 @@
-from typing import Dict, List
-from datetime import datetime
+from typing import Dict, List, Optional
+from datetime import datetime, timezone
 from vocadb_tools.api.vocadb import VocaDBAPI
+from vocadb_tools.api.platforms import get_platform_publish_date
 from vocadb_tools.utils.language import is_japanese
 from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals
 
 class SongListFormatter:
-    def __init__(self, song_ids: List[int], site: str = 'vocadb'):
+    def __init__(self, song_ids: List[int], site: str = 'vocadb', youtube_api_key: Optional[str] = None):
         """
         곡 id 리스트를 받아 포맷팅하는 클래스입니다.
         
         Args:
             song_ids (List[int]): VocaDB의 곡 ID 리스트.
+            site (str): 사이트 (vocadb, utaitedb 등)
+            youtube_api_key (Optional[str]): YouTube Data API 키 (정확한 날짜 조회용)
         """
         self.api = VocaDBAPI(site=site)
         self.song_ids = song_ids
+        self.youtube_api_key = youtube_api_key
 
     def _format_media_icons(self, pvs: List[Dict]) -> (str, datetime):
         """
         PV 링크를 위키 아이콘으로 변환합니다.
         아이콘은 NicoNicoDouga, Youtube, Bilibili, SoundCloud, Piapro 순으로 합쳐집니다.
+        플랫폼 API를 통해 정확한 투고 시각을 가져와 UTC+9 날짜를 계산합니다.
         """
         icons = {
             'NicoNicoDouga': '[[파일:니코니코 동화 아이콘.svg|width=24]]',
@@ -28,7 +33,7 @@ class SongListFormatter:
             'Piapro': '[[파일:피아프로 아이콘.svg|width=24]]'
         }
         media_links_dict = {service: [] for service in icons}
-        earliest_date = datetime.max
+        earliest_date = datetime.max.replace(tzinfo=timezone.utc)
 
         for pv in pvs:
             if pv.get('pvType') != 'Original' or pv.get('disabled'):
@@ -44,9 +49,18 @@ class SongListFormatter:
             if service in icons:
                 media_links_dict[service].append(f"[[{url}|{icons[service]}]]")
 
-            pub_date = datetime.fromisoformat(
-                pv.get('publishDate', '2100-01-01T00:00:00')
-            )
+            # 플랫폼 API를 통해 정확한 투고 시각 가져오기 (UTC+9로 변환됨)
+            pub_date = get_platform_publish_date(url, service, self.youtube_api_key)
+            
+            # API 실패 시 VocaDB 데이터 사용
+            if pub_date is None:
+                pub_date = datetime.fromisoformat(
+                    pv.get('publishDate', '2100-01-01T00:00:00')
+                )
+                # VocaDB 데이터는 timezone 정보 없으므로 UTC로 간주
+                if pub_date.tzinfo is None:
+                    pub_date = pub_date.replace(tzinfo=timezone.utc)
+            
             if pub_date < earliest_date:
                 earliest_date = pub_date
 
@@ -80,7 +94,7 @@ class SongListFormatter:
             media_links, pub_date = self._format_media_icons(
                 song_data['pvs']
             )
-            if pub_date != datetime.max:
+            if pub_date != datetime.max.replace(tzinfo=timezone.utc):
                 formatted_date = format_dtdate_korean(pub_date)
 
                 # 최종 출력 행 구성
