@@ -94,6 +94,11 @@ class SongListFormatter:
             media_links, pub_date = self._format_media_icons(
                 song_data['pvs']
             )
+
+            # 가수 또는 미디어 링크가 공백일 경우 제외
+            if vocals_format == '' or media_links == '':
+                continue
+
             if pub_date != datetime.max.replace(tzinfo=timezone.utc):
                 formatted_date = format_dtdate_korean(pub_date)
 
