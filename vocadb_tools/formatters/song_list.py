@@ -1,5 +1,5 @@
 from typing import Dict, List
-from datetime import datetime
+from datetime import datetime, timezone
 from vocadb_tools.api.vocadb import VocaDBAPI
 from vocadb_tools.utils.language import is_japanese
 from vocadb_tools.utils.formatting import format_dtdate_korean, parse_artist_vocals, convert_utc_to_kst
@@ -28,7 +28,7 @@ class SongListFormatter:
             'Piapro': '[[파일:피아프로 아이콘.svg|width=24]]'
         }
         media_links_dict = {service: [] for service in icons}
-        earliest_date = datetime.max
+        earliest_date = datetime.max.replace(tzinfo=timezone.utc)
 
         for pv in pvs:
             if pv.get('pvType') != 'Original' or pv.get('disabled'):
