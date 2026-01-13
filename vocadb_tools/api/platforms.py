@@ -29,6 +29,13 @@ def extract_video_id_from_url(url: str, service: str) -> Optional[str]:
         if match:
             return match.group(1)
     
+    elif service == 'Bilibili':
+        # https://www.bilibili.com/video/BV1xx411c7XD
+        # https://www.bilibili.com/video/av12345678
+        match = re.search(r'bilibili\.com/video/((?:BV|av)[a-zA-Z0-9]+)', url)
+        if match:
+            return match.group(1)
+    
     return None
 
 def get_youtube_publish_date(video_id: str, api_key: str) -> Optional[datetime]:
@@ -97,6 +104,40 @@ def get_niconico_publish_date(video_id: str) -> Optional[datetime]:
     
     return None
 
+def get_bilibili_publish_date(video_id: str) -> Optional[datetime]:
+    """
+    Bilibili API로 동영상 투고 시각을 가져옵니다.
+    video_id는 BV 또는 av 번호입니다.
+    Bilibili는 UTC+8(중국 시간)이지만 pubdate는 UTC 타임스탬프이므로 UTC+9로 변환합니다.
+    """
+    try:
+        # BV 번호인 경우
+        if video_id.startswith('BV'):
+            url = f"https://api.bilibili.com/x/web-interface/view?bvid={video_id}"
+        # av 번호인 경우 (av 접두사 제거)
+        else:
+            aid = video_id.replace('av', '')
+            url = f"https://api.bilibili.com/x/web-interface/view?aid={aid}"
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        if data.get('code') == 0 and 'data' in data:
+            # pubdate는 Unix 타임스탬프 (UTC)
+            timestamp = data['data']['pubdate']
+            dt = datetime.fromtimestamp(timestamp, tz=timezone.utc)
+            # UTC+9로 변환
+            return dt.astimezone(KST)
+    
+    except Exception as e:
+        print(f"Bilibili API 오류 (video_id: {video_id}): {e}")
+    
+    return None
+
 def get_platform_publish_date(url: str, service: str, youtube_api_key: Optional[str] = None) -> Optional[datetime]:
     """
     플랫폼별로 정확한 투고 시각을 가져옵니다.
@@ -110,5 +151,7 @@ def get_platform_publish_date(url: str, service: str, youtube_api_key: Optional[
         return get_youtube_publish_date(video_id, youtube_api_key)
     elif service == 'NicoNicoDouga':
         return get_niconico_publish_date(video_id)
+    elif service == 'Bilibili':
+        return get_bilibili_publish_date(video_id)
     
     return None
