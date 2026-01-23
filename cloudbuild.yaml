@@ -1,11 +1,11 @@
 steps:
-  # Docker 이미지 빌드
+  # Docker 이미지 빌드 (latest 태그만 사용)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/vocadb-tool', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/vocadb-tool:latest', '.']
   
   # Docker 이미지를 Container Registry에 푸시
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/vocadb-tool']
+    args: ['push', 'gcr.io/$PROJECT_ID/vocadb-tool:latest']
   
   # Cloud Run에 배포
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -15,7 +15,7 @@ steps:
       - 'deploy'
       - 'vocadb-tool'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/vocadb-tool'
+      - 'gcr.io/$PROJECT_ID/vocadb-tool:latest'
       - '--region'
       - 'asia-northeast3'
       - '--platform'
@@ -45,4 +45,4 @@ steps:
       - '--cpu-throttling'
 
 images:
-  - 'gcr.io/$PROJECT_ID/vocadb-tool'
+  - 'gcr.io/$PROJECT_ID/vocadb-tool:latest'
