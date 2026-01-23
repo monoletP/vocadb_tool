@@ -1,0 +1,10 @@
+[
+  {
+    "name": "keep-recent-only",
+    "action": "KEEP",
+    "condition": {
+      "tagState": "TAGGED",
+      "newerThan": "2592000s"
+    }
+  }
+]
